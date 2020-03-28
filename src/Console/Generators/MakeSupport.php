@@ -27,7 +27,7 @@ class MakeSupport extends AbstractGenerator
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../../resources/stubs/support/support.stub';
+        return __DIR__ . '/../../../resources/stubs/support/support.stub';
     }
 
     /**

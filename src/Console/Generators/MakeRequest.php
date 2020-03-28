@@ -27,7 +27,7 @@ class MakeRequest extends AbstractGenerator
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../../resources/stubs/requests/request.stub';
+        return __DIR__ . '/../../../resources/stubs/requests/request.stub';
     }
 
     /**

@@ -27,7 +27,7 @@ class MakeFacade extends AbstractGenerator
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../../resources/stubs/facades/facade.stub';
+        return __DIR__ . '/../../../resources/stubs/facades/facade.stub';
     }
 
     /**

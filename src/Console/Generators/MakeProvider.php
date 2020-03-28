@@ -27,7 +27,7 @@ class MakeProvider extends AbstractGenerator
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../../resources/stubs/providers/provider.stub';
+        return __DIR__ . '/../../../resources/stubs/providers/provider.stub';
     }
 
     /**

@@ -28,7 +28,7 @@ class MakeModel extends AbstractGenerator
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../../resources/stubs/models/model.stub';
+        return __DIR__ . '/../../../resources/stubs/models/model.stub';
     }
 
     /**

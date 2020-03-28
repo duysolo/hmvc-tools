@@ -27,7 +27,7 @@ class MakeViewComposer extends AbstractGenerator
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../../resources/stubs/view-composers/composer.stub';
+        return __DIR__ . '/../../../resources/stubs/view-composers/composer.stub';
     }
 
     protected function getClass(string $name): string

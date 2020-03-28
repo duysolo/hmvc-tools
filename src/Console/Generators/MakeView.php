@@ -40,7 +40,7 @@ class MakeView extends AbstractGenerator
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../../resources/stubs/views/view.stub';
+        return __DIR__ . '/../../../resources/stubs/views/view.stub';
     }
 
     /**

@@ -27,7 +27,7 @@ class MakeMiddleware extends AbstractGenerator
      */
     protected function getStub(): string
     {
-        return __DIR__ . '/../../../../resources/stubs/middleware/middleware.stub';
+        return __DIR__ . '/../../../resources/stubs/middleware/middleware.stub';
     }
 
     /**
