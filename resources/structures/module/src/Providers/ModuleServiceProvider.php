@@ -42,6 +42,5 @@ class ModuleServiceProvider extends AbstractModuleProvider
         parent::register();
 
         $this->app->register(RouteServiceProvider::class);
-        $this->app->register(BootstrapModuleServiceProvider::class);
     }
 }

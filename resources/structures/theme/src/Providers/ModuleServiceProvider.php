@@ -2,9 +2,9 @@
 
 namespace DummyNamespace\Providers;
 
-use WebEdBase\Providers\AbstractModuleProvider;
+use HMVCTools\Providers\AbstractModuleProvider;
 
-class ModuleProvider extends AbstractModuleProvider
+class ModuleServiceProvider extends AbstractModuleProvider
 {
     /**
      * @return string
@@ -42,6 +42,5 @@ class ModuleProvider extends AbstractModuleProvider
         parent::register();
 
         $this->app->register(RouteServiceProvider::class);
-        $this->app->register(BootstrapModuleServiceProvider::class);
     }
 }
