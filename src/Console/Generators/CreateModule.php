@@ -5,7 +5,6 @@ namespace HMVCTools\Console\Generators;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use stdClass;
 
@@ -76,11 +75,10 @@ class CreateModule extends Command
             $this->moduleType = self::TYPE_PLUGINS;
         }
 
-        $directory = base_path('platform/' . $this->moduleType);
-
-        if (!File::exists($directory)) {
-            File::makeDirectory($directory);
-        }
+        $this->createFolderIfNotExists([
+            'platform',
+            'platform/' . $this->moduleType,
+        ]);
 
         $this->container['alias'] = Str::slug($this->argument('alias'));
 
@@ -94,7 +92,8 @@ class CreateModule extends Command
         $this->moduleFolderName = Str::slug($this->ask('Module folder name:', $this->container['alias']));
 
         $directory = base_path('platform/' . $this->moduleType . '/' . $this->moduleFolderName);
-        if (File::exists($directory)) {
+
+        if ($this->files->exists($directory)) {
             $this->error('The module path already exists');
 
             exit();
@@ -124,11 +123,11 @@ class CreateModule extends Command
         /**
          * Make directory
          */
-        $this->files->makeDirectory($directory);
+        $this->files->makeDirectory('platform/' . $this->moduleType . '/' . $this->moduleFolderName);
         $this->files->copyDirectory($source, $directory);
 
         try {
-            $composerJSON = json_decode(File::get($directory . '/composer.json'), true);
+            $composerJSON = json_decode($this->files->get($directory . '/composer.json'), true);
 
             $composerJSON['name'] = $this->moduleType . '/' . $this->container['alias'];
             $composerJSON['description'] = $this->container['description'];
@@ -139,8 +138,8 @@ class CreateModule extends Command
             $moduleJSON = [];
             $moduleJSON = array_merge($moduleJSON, $this->container);
 
-            File::put($directory . '/composer.json', json_encode_prettify($composerJSON));
-            File::put($directory . '/module.json', json_encode_prettify($moduleJSON));
+            $this->files->put($directory . '/composer.json', json_encode_prettify($composerJSON));
+            $this->files->put($directory . '/module.json', json_encode_prettify($moduleJSON));
 
             /**
              * Replace files placeholder
@@ -177,5 +176,19 @@ class CreateModule extends Command
         ];
 
         return str_replace($find, $replace, $contents);
+    }
+
+    /**
+     * @param array $names
+     */
+    protected function createFolderIfNotExists(array $names): void
+    {
+        foreach ($names as $name) {
+            $directory = base_path($name);
+
+            if (!$this->files->exists($directory)) {
+                $this->files->makeDirectory($name);
+            }
+        }
     }
 }
