@@ -2,8 +2,6 @@
 
 namespace HMVCTools\Console\Generators;
 
-use HMVCTools\Console\Generators\AbstractGenerator;
-
 class MakeRequest extends AbstractGenerator
 {
     /**

@@ -9,19 +9,23 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use stdClass;
 
-class MakeModule extends Command
+class CreateModule extends Command
 {
-    /**
-     * @var string
-     */
-    protected $signature = 'module:create
-        {alias : The alias of the module}
-    ';
+    const TYPE_CORE = 'core';
+
+    const TYPE_PLUGINS = 'plugins';
+
+    const TYPE_THEMES = 'themes';
 
     /**
      * @var string
      */
-    protected $description = 'WebEd modules generator.';
+    protected $signature = 'module:create {alias : The alias of the module}';
+
+    /**
+     * @var string
+     */
+    protected $description = 'HMVC modules generator.';
 
     /**
      * @var Filesystem
@@ -40,9 +44,9 @@ class MakeModule extends Command
      * @var array
      */
     protected $acceptedTypes = [
-        'core' => 'Core',
-        'plugins' => 'Plugins',
-        'themes' => 'Themes',
+        self::TYPE_CORE => 'Core',
+        self::TYPE_PLUGINS => 'Plugins',
+        self::TYPE_THEMES => 'Themes',
     ];
 
     protected $moduleType;
@@ -66,10 +70,10 @@ class MakeModule extends Command
      */
     public function handle()
     {
-        $this->moduleType = $this->ask('Your module type. Accepted: core, plugins, themes.', 'plugins');
+        $this->moduleType = $this->ask('Your module type. Accepted: core, plugins, themes.', self::TYPE_PLUGINS);
 
         if (!in_array($this->moduleType, array_keys($this->acceptedTypes))) {
-            $this->moduleType = 'plugins';
+            $this->moduleType = self::TYPE_PLUGINS;
         }
 
         $directory = base_path('platform/' . $this->moduleType);
@@ -111,17 +115,17 @@ class MakeModule extends Command
     {
         $directory = base_path('platform/' . $this->moduleType . '/' . $this->moduleFolderName);
 
-        if ($this->moduleType == 'theme') {
-            $source = __DIR__ . '/../../../../resources/structures/theme';
+        if ($this->moduleType == self::TYPE_THEMES) {
+            $source = __DIR__ . '/../../../resources/structures/theme';
         } else {
-            $source = __DIR__ . '/../../../../resources/structures/module';
+            $source = __DIR__ . '/../../../resources/structures/module';
         }
 
         /**
          * Make directory
          */
         $this->files->makeDirectory($directory);
-        $this->files->copyDirectory($source, $directory, null);
+        $this->files->copyDirectory($source, $directory);
 
         try {
             $composerJSON = json_decode(File::get($directory . '/composer.json'), true);
@@ -132,17 +136,17 @@ class MakeModule extends Command
             $composerJSON['require'] = new stdClass();
             $composerJSON['require-dev'] = new stdClass();
 
-            File::put($directory . '/composer.json', json_encode_prettify($composerJSON));
-
             $moduleJSON = [];
             $moduleJSON = array_merge($moduleJSON, $this->container);
 
+            File::put($directory . '/composer.json', json_encode_prettify($composerJSON));
             File::put($directory . '/module.json', json_encode_prettify($moduleJSON));
 
             /**
              * Replace files placeholder
              */
             $files = $this->files->allFiles($directory);
+
             foreach ($files as $file) {
                 $contents = $this->replacePlaceholders($file->getContents());
                 $filePath = base_path('platform/' . $this->moduleType . '/' . $this->moduleFolderName . '/' . $file->getRelativePathname());
@@ -153,6 +157,8 @@ class MakeModule extends Command
             $this->files->deleteDirectory($directory);
 
             $this->error($exception->getMessage());
+
+            exit();
         }
     }
 

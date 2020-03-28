@@ -6,8 +6,9 @@ use HMVCTools\Console\Generators\MakeCommand;
 use HMVCTools\Console\Generators\MakeController;
 use HMVCTools\Console\Generators\MakeFacade;
 use HMVCTools\Console\Generators\MakeMiddleware;
+use HMVCTools\Console\Generators\MakeMigration;
 use HMVCTools\Console\Generators\MakeModel;
-use HMVCTools\Console\Generators\MakeModule;
+use HMVCTools\Console\Generators\CreateModule;
 use HMVCTools\Console\Generators\MakeProvider;
 use HMVCTools\Console\Generators\MakeRequest;
 use HMVCTools\Console\Generators\MakeSupport;
@@ -38,7 +39,7 @@ class ConsoleServiceProvider extends ServiceProvider
         }
 
         $this->commands([
-            MakeModule::class,
+            CreateModule::class,
             MakeProvider::class,
             MakeController::class,
             MakeMiddleware::class,
@@ -49,6 +50,7 @@ class ConsoleServiceProvider extends ServiceProvider
             MakeView::class,
             MakeCommand::class,
             MakeViewComposer::class,
+            MakeMigration::class,
         ]);
     }
 }

@@ -29,6 +29,8 @@ abstract class AbstractModuleProvider extends ServiceProvider
 
         /*Load translations*/
         $this->loadTranslationsFrom($dir . '/../../resources/lang', $moduleName);
+
+        $this->loadMigrationsFrom($dir . '/../../database/migrations');
     }
 
     /**

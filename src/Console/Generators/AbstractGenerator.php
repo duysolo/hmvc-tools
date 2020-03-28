@@ -9,6 +9,12 @@ use Symfony\Component\Console\Input\InputArgument;
 
 abstract class AbstractGenerator extends Command
 {
+    const TYPE_CORE = 'core';
+
+    const TYPE_PLUGINS = 'plugins';
+
+    const TYPE_THEMES = 'themes';
+
     /**
      * The filesystem instance.
      *
@@ -38,9 +44,9 @@ abstract class AbstractGenerator extends Command
      * @var array
      */
     protected $acceptedTypes = [
-        'core' => 'Core',
-        'plugins' => 'Plugins',
-        'themes' => 'Themes',
+        self::TYPE_CORE => 'Core',
+        self::TYPE_PLUGINS => 'Plugins',
+        self::TYPE_THEMES => 'Themes',
     ];
 
     /**
@@ -60,15 +66,16 @@ abstract class AbstractGenerator extends Command
      * Execute the console command.
      *
      * @return bool
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function handle()
     {
-        $this->moduleType = $this->ask('Your module type. Accepted: core, plugins, themes.', 'plugins');
+        $this->moduleType = $this->ask('Your module type. Accepted: core, plugins, themes.', self::TYPE_PLUGINS);
 
         $this->moduleName = $this->getModuleName();
 
         if (!in_array($this->moduleType, array_keys($this->acceptedTypes))) {
-            $this->moduleType = 'plugins';
+            $this->moduleType = self::TYPE_PLUGINS;
         }
 
         $name = $this->parseName($this->getNameInput());
@@ -136,6 +143,7 @@ abstract class AbstractGenerator extends Command
      *
      * @param string $name
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function buildClass($name)
     {
