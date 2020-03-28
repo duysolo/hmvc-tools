@@ -1,0 +1,22 @@
+{
+    "name": "duyphan2502/hmvc-tools",
+    "require": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "HMVCTools\\": "src/"
+        },
+        "files": [
+
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "HMVCTools\\Providers\\ModuleServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
