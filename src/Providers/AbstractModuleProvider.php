@@ -80,10 +80,25 @@ abstract class AbstractModuleProvider extends ServiceProvider
         }
 
         //Merge configs
-        $configs = split_files_with_basename($this->app['files']->glob($this->getDir() . '/../../config/*.php'));
+        $configs = $this->splitFilesWithBasename($this->app['files']->glob($this->getDir() . '/../../config/*.php'));
 
         foreach ($configs as $key => $row) {
             $this->mergeConfigFrom($row, $key);
         }
+    }
+
+    /**
+     * @param array $files
+     * @param string $suffix
+     * @return array
+     */
+    protected function splitFilesWithBasename(array $files, $suffix = '.php'): array
+    {
+        $result = [];
+        foreach ($files as $row) {
+            $baseName = basename($row, $suffix);
+            $result[$baseName] = $row;
+        }
+        return $result;
     }
 }

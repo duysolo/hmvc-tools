@@ -71,7 +71,7 @@ If you want Laravel auto register your module, you need to update the module `co
     "extra": {
         "laravel": {
             "providers": [
-                "TestModule\\ModuleServiceProvider"
+                "TestModule\\Providers\\ModuleServiceProvider"
             ]
         }
     },
