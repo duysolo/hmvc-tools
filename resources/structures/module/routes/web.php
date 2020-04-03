@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Route;
 $moduleRoute = 'DummyAlias';
 
 Route::group(['prefix' => $moduleRoute], function (Router $router) {
-    /**
-     *
-     * Put some route here
-     *
-     */
+    Route::get('/', function() {
+        return "I'm  /DummyAlias...!";
+    });
 });
