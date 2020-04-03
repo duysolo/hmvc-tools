@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use stdClass;
+use Symfony\Component\Process\Process;
 
 class CreateModule extends Command
 {
@@ -19,7 +20,7 @@ class CreateModule extends Command
     /**
      * @var string
      */
-    protected $signature = 'module:create {alias : The alias of the module}';
+    protected $signature = 'module:create {alias : The alias of the module} {--autoload : Autoload module}';
 
     /**
      * @var string
@@ -106,8 +107,12 @@ class CreateModule extends Command
     protected function step2()
     {
         $this->generatingModule();
-
-        $this->info("Your module generated successfully.");
+        if($this->option('autoload')) {
+            $this->installModule();
+            $this->info("Now, your module serving at: " . env('APP_URL') . "/{$this->container['alias']}");
+        } else {
+            $this->info("Your module generated successfully.");
+        }
     }
 
     protected function generatingModule()
@@ -134,6 +139,11 @@ class CreateModule extends Command
             $composerJSON['autoload']['psr-4'][$this->container['namespace'] . '\\'] = 'src/';
             $composerJSON['require'] = new stdClass();
             $composerJSON['require-dev'] = new stdClass();
+            if($this->option('autoload')) {
+                $composerJSON['extra']['laravel']['providers'] = $this->container['namespace'] . '\\Providers\\ModuleServiceProvider';
+            } else {
+                $composerJSON['extra'] = new stdClass();
+            }
 
             $moduleJSON = [];
             $moduleJSON = array_merge($moduleJSON, $this->container);
@@ -190,5 +200,13 @@ class CreateModule extends Command
                 $this->files->makeDirectory($name);
             }
         }
+    }
+
+    protected function installModule() {
+        $command = 'composer require ' . $this->moduleType . '/' . $this->moduleFolderName;
+        $this->info($command);
+        $process = Process::fromShellCommandline($command);
+        $process->run();
+        $this->info($process->getOutput());
     }
 }
