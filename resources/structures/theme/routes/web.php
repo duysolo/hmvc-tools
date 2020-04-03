@@ -11,6 +11,8 @@ $moduleRoute = 'DummyAlias';
 
 Route::group(['prefix' => $moduleRoute], function (Router $router) {
     Route::get('/', function() {
-        return "I'm  /DummyAlias...!";
+        page_title()->setTitle('DummyAlias');
+
+        return view('DummyAlias::page-templates.homepage');
     });
 });

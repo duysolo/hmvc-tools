@@ -100,19 +100,23 @@ class CreateModule extends Command
             exit();
         }
 
-        $this->container['description'] = (string)$this->ask('Description of module:');
-        $this->container['namespace'] = $this->ask('Namespace of module:', $this->acceptedTypes[$this->moduleType] . '\\' . Str::studly($this->container['alias']));
+        $this->container['description'] = $this->ask('Description of module:', '');
+        $this->container['namespace'] = $this->ask(
+            'Namespace of module:',
+            $this->acceptedTypes[$this->moduleType] . '\\' . Str::studly($this->container['alias'])
+        );
     }
 
     protected function step2()
     {
         $this->generatingModule();
-        if($this->option('autoload')) {
+
+        if ($this->option('autoload')) {
             $this->installModule();
-            $this->info("Now, your module serving at: " . env('APP_URL') . "/{$this->container['alias']}");
-        } else {
-            $this->info("Your module generated successfully.");
         }
+
+        $this->info("Your module generated successfully.");
+        $this->info("Now, your module serving at: " . env('APP_URL') . "/{$this->container['alias']}");
     }
 
     protected function generatingModule()
@@ -139,7 +143,8 @@ class CreateModule extends Command
             $composerJSON['autoload']['psr-4'][$this->container['namespace'] . '\\'] = 'src/';
             $composerJSON['require'] = new stdClass();
             $composerJSON['require-dev'] = new stdClass();
-            if($this->option('autoload')) {
+
+            if ($this->option('autoload')) {
                 $composerJSON['extra']['laravel']['providers'] = $this->container['namespace'] . '\\Providers\\ModuleServiceProvider';
             } else {
                 $composerJSON['extra'] = new stdClass();
@@ -202,7 +207,8 @@ class CreateModule extends Command
         }
     }
 
-    protected function installModule() {
+    protected function installModule(): void
+    {
         $command = 'composer require ' . $this->moduleType . '/' . $this->moduleFolderName;
         $this->info($command);
         $process = Process::fromShellCommandline($command);

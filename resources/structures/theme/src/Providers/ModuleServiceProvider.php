@@ -19,7 +19,7 @@ class ModuleServiceProvider extends AbstractModuleProvider
      */
     public function getModuleName()
     {
-        return THEME_CONST_NAME;
+        return 'DummyAlias';
     }
 
     /**
