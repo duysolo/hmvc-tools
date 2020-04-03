@@ -80,7 +80,7 @@ If you want Laravel auto register your module, you need to update the module `co
 ```
 Don't forget to run `composer update`.
 
-Or you can do skip these actions easier by adding option `--autoload` when you try `module:create`
+Or you can skip these actions easier by adding option `--autoload` when you try `module:create`
 ```$xslt
 php artisan module:create <module-name> --autoload
 ```
